@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const ObjectId = require("mongoose").Types.ObjectId;
 
 //Load Task Model
 const Task = require("../../models/Task");
@@ -29,6 +30,29 @@ router.post(
       .save()
       .then((task) => res.json(task))
       .catch((err) => console.log(err));
+  }
+);
+
+//@route    api/tasks/:id
+//@desc     Get tasks bu user id
+//@access   Private
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const id = req.params.id;
+    const errors = {};
+
+    Task.find({ user: ObjectId(id) })
+      .then((tasks) => {
+        if (!tasks) {
+          errors.notasks = "There are no tasks for this user";
+          return res.status(404).json(errors);
+        }
+
+        res.json(tasks);
+      })
+      .catch((err) => res.status(404).json({ task: "There are no tasks" }));
   }
 );
 
