@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
 import {Text, View} from 'react-native';
+import Router from './src/Router';
 
 //Components
-import Register from './components/auth/Register';
+import Login from './src/components/auth/Login';
 
 class App extends Component {
   render() {
-    return (
-      <View>
-        <Register />
-      </View>
-    );
+    return <Router />;
   }
 }
 
