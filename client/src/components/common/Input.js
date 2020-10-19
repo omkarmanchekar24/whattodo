@@ -1,14 +1,18 @@
 import React from 'react';
 import {View, TextInput} from 'react-native';
 
-export default function Input({placeholder}) {
+export default function Input({placeholder, style}) {
   return (
     <View>
-      <TextInput style={styles.input} placeholder={placeholder} />
+      <TextInput
+        keyboardType="email-address"
+        style={[style, styles.input]}
+        placeholder={placeholder}
+      />
     </View>
   );
 }
 
 const styles = {
-  input: {borderWidth: 0.5, borderRadius: 10, marginBottom: 20},
+  input: {borderWidth: 0.5, borderRadius: 10},
 };
