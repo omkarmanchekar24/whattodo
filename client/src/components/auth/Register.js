@@ -3,12 +3,65 @@ import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {Button} from 'react-native-paper';
 import Input from '../common/Input';
 import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
 
 //Components
 import Header from '../common/Header';
+import If from '../common/If';
+
+//Actions
+import {register} from '../../actions/authActions';
 
 class Register extends Component {
+  state = {
+    name: 'omkar',
+    email: 'omkarmanchekar.24@gmail.com',
+    password: '444444',
+    errors: {},
+  };
+
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.errors) {
+  //     this.setState({
+  //       errors: nextProps.errors,
+  //     });
+  //   }
+  // }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.errors) {
+      return {
+        errors: props.errors,
+      };
+    }
+    return null;
+  }
+
+  updateTextInput = (prop, val) => {
+    this.setState({
+      [prop]: val,
+      errors: {},
+    });
+  };
+
+  handleRegister = () => {
+    const {name, email, password} = this.state;
+    const errors = {};
+
+    if (name.length === 0) errors.name = 'Name is required';
+    if (email.length === 0) errors.email = 'Email is required';
+    if (password.length === 0) errors.password = 'Password is required';
+
+    if (Object.keys(errors).length > 0) {
+      this.setState({errors});
+      return;
+    }
+
+    this.props.register(name, email, password);
+  };
+
   render() {
+    const {errors} = this.state;
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
@@ -18,15 +71,43 @@ class Register extends Component {
             scrollEnabled={true}
             contentContainerStyle={{height: 500, justifyContent: 'center'}}
             showsVerticalScrollIndicator={false}>
-            <Input placeholder="Name" />
-            <Text style={styles.errorText}>Name is required</Text>
-            <Input placeholder="Email" style={{marginTop: 20}} />
-            <Text style={styles.errorText}>Email is required</Text>
-            <Input placeholder="Password" style={{marginTop: 20}} />
-            <Text style={styles.errorText}>Password is required</Text>
+            <Text style={styles.title}>Register</Text>
+            <Input
+              placeholder="Name"
+              value={this.state.name}
+              style={{marginTop: 20}}
+              name="name"
+              onChangeText={this.updateTextInput}
+            />
+            <If show={errors.name}>
+              <Text style={styles.errorText}>{errors.name}</Text>
+            </If>
+
+            <Input
+              placeholder="Email"
+              value={this.state.email}
+              style={{marginTop: 20}}
+              name="email"
+              onChangeText={this.updateTextInput}
+            />
+            <If show={errors.email}>
+              <Text style={styles.errorText}>{errors.email}</Text>
+            </If>
+
+            <Input
+              placeholder="Password"
+              value={this.state.password}
+              style={{marginTop: 20}}
+              name="password"
+              onChangeText={this.updateTextInput}
+            />
+            <If show={errors.password}>
+              <Text style={styles.errorText}>{errors.password}</Text>
+            </If>
+
             <Button
               mode="outlined"
-              onPress={() => {}}
+              onPress={this.handleRegister}
               style={styles.registerButton}
               color="#000">
               Sign Up
@@ -64,7 +145,12 @@ const styles = {
     height: 350,
     width: 250,
   },
-
+  title: {
+    fontSize: 30,
+    alignSelf: 'center',
+    letterSpacing: 5,
+    fontWeight: 'bold',
+  },
   text: {
     fontSize: 12,
     marginTop: 10,
@@ -84,4 +170,11 @@ const styles = {
   },
 };
 
-export default Register;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.register.loading,
+    errors: state.register.errors,
+  };
+};
+
+export default connect(mapStateToProps, {register})(Register);
