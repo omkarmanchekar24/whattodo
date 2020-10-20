@@ -10,6 +10,7 @@ const User = require("../../models/User");
 
 //Load input validation
 const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
 
 //@route    api/users/test
 //@desc     Tests users route
@@ -57,9 +58,15 @@ router.post("/register", (req, res) => {
 //@desc     Login user
 //@access   Public
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  //Check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
-  const errors = {};
 
   User.findOne({ email })
     .then((user) => {
