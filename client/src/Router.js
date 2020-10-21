@@ -5,11 +5,13 @@ import {Scene, Router} from 'react-native-router-flux';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Landing from './components/Landing/Landing';
+import Splash from './components/splash/Splash';
 
 const RouterComponent = () => {
   return (
     <Router>
       <Scene key="root" hideNavBar initial>
+        <Scene key="splash" component={Splash} hideNavBar initial />
         <Scene key="auth">
           <Scene key="login" component={Login} hideNavBar initial />
           <Scene key="register" component={Register} hideNavBar />
