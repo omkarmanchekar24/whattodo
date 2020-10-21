@@ -12,13 +12,14 @@ import {
   SET_CURRENT_USER,
 } from './types';
 import {Actions} from 'react-native-router-flux';
+import {ip} from '../config/config';
 
 export const register = (name, email, password) => {
   return (dispatch) => {
     dispatch(setRegisterLoading());
 
     axios
-      .post('http://192.168.0.12:5000/api/users/register', {
+      .post(`${ip}/api/users/register`, {
         name,
         email,
         password,
@@ -44,7 +45,7 @@ export const login = (email, password) => {
     dispatch(setLoginLoading());
 
     axios
-      .post('http://192.168.0.12:5000/api/users/login', {
+      .post(`${ip}/api/users/login`, {
         email,
         password,
       })
@@ -58,7 +59,7 @@ export const login = (email, password) => {
         const decoded = jwt_decode(token);
 
         //Set current user
-        dispatch(setCurrentUser(decoded));
+        dispatch(setCurrentUser(decoded, token));
 
         dispatch({
           type: Login_User,
@@ -75,11 +76,20 @@ export const login = (email, password) => {
   };
 };
 
+export const logout = () => {
+  return (dispatch) => {
+    setAuthToken(false);
+    dispatch(setCurrentUser({}, null));
+    Actions.auth();
+    ToastAndroid.show('Logged out', ToastAndroid.LONG);
+  };
+};
+
 //Set logged in user
-export const setCurrentUser = (decoded) => {
+export const setCurrentUser = (decoded, token) => {
   return {
     type: SET_CURRENT_USER,
-    payload: decoded,
+    payload: {decoded, token},
   };
 };
 

@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {Text, View, ImageBackground} from 'react-native';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
+import setAuthToken from '../../utils/setAuthToken';
 
 class Splash extends Component {
   componentDidMount() {
     setTimeout(() => {
       if (this.props.auth.user) {
+        setAuthToken(this.props.auth.token);
         Actions.welcome();
       } else {
         Actions.auth();

@@ -1,23 +1,75 @@
 import React, {Component} from 'react';
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {Card, Button, IconButton} from 'react-native-paper';
 import Input from '../common/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 
 //Components
 import Header from '../common/Header';
+import Task from '../common/Task';
 
 //Actions
+import {logout} from '../../actions/authActions';
+import {getTasks} from '../../actions/taskActions';
 
 class Landing extends Component {
+  state = {
+    tasks: null,
+  };
+
+  componentDidMount() {
+    console.log('id', this.props.auth.user.id);
+    this.props.getTasks(this.props.auth.user.id);
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.task.tasks) {
+      return {
+        tasks: props.task.tasks,
+      };
+    }
+    return null;
+  }
+
   render() {
+    let content =
+      this.state.tasks !== null && this.state.tasks.length > 0 ? (
+        this.state.tasks.map((task) => (
+          <Task
+            title={task.text}
+            todoAt={task.date}
+            key={task._id}
+            id={task._id}
+          />
+        ))
+      ) : (
+        <Text>You haven't added any task yet.</Text>
+      );
+
     return (
       <View style={styles.container}>
-        <Header style={styles.header} />
-
+        <Header
+          style={styles.header}
+          logout={true}
+          onLogoutClick={this.props.logout}
+        />
         <View style={styles.body}>
-          <Text>Landing</Text>
+          <ScrollView
+            style={{width: '100%'}}
+            contentContainerStyle={{
+              flexGrow: 1,
+              alignItems: 'center',
+            }}
+            scrollEnabled={true}>
+            {content}
+          </ScrollView>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => console.log('Pressed')}>
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -34,42 +86,35 @@ const styles = {
   },
   body: {
     flex: 0.9,
-    justifyContent: 'center',
     padding: 10,
-    alignSelf: 'center',
-    height: 350,
-    width: 250,
   },
-  title: {
+  button: {
+    borderWidth: 2,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    height: 60,
+    backgroundColor: '#fff',
+    borderRadius: 100,
+  },
+  buttonText: {
     fontSize: 30,
-    alignSelf: 'center',
-    letterSpacing: 5,
-    fontWeight: 'bold',
-  },
-  text: {
-    fontSize: 12,
-    marginTop: 10,
-    fontWeight: 'bold',
-  },
-  errorText: {
-    fontSize: 12,
-    color: 'red',
-  },
-  loginButton: {marginTop: 20},
-  registerButton: {
-    borderWidth: 1,
-    borderRadius: 5,
-    width: 50,
-    height: 20,
-    marginTop: 10,
   },
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.login.loading,
-    errors: state.login.errors,
+    auth: state.auth,
+    task: state.task,
   };
 };
 
-export default connect(mapStateToProps, null)(Landing);
+export default connect(mapStateToProps, {logout, getTasks})(Landing);
+
+// <Button onPress={() => {}} style={styles.button} mode="outlined">
+// +
+// </Button>

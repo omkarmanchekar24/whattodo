@@ -56,4 +56,23 @@ router.get(
   }
 );
 
+//@route    Delete api/tasks/:id
+//@desc     Delete task by id
+//@access   Private
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const id = req.params.id;
+    const errors = {};
+
+    Task.findById(id)
+      .then((task) => {
+        //Delete
+        task.remove().then(() => res.json({ success: true }));
+      })
+      .catch((err) => res.status(404).json({ tasknotfound: "No task found" }));
+  }
+);
+
 module.exports = router;
