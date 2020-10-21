@@ -31,8 +31,6 @@ const styles = {
   },
   header: {
     flex: 0.1,
-    justifyContent: 'flex-end',
-    borderBottomWidth: 0.5,
   },
   body: {
     flex: 0.9,

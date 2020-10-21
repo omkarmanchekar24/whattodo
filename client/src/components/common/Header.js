@@ -4,7 +4,7 @@ import {Text, View} from 'react-native';
 class Header extends Component {
   render() {
     return (
-      <View style={this.props.style}>
+      <View style={[styles.container, this.props.style]}>
         <Text style={styles.title}>What to do </Text>
       </View>
     );
@@ -12,6 +12,10 @@ class Header extends Component {
 }
 
 const styles = {
+  container: {
+    justifyContent: 'flex-end',
+    borderBottomWidth: 0.5,
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',

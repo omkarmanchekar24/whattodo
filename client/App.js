@@ -3,6 +3,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import Router from './src/Router';
 import {Provider} from 'react-redux';
 import persist from './src/config/store';
+import {} from 'react-native-paper';
 
 const persistStore = persist();
 
