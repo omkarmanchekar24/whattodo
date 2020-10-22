@@ -5,6 +5,7 @@ import Input from '../common/Input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import DatePicker from '../common/DatePicker';
 
 //Components
 import Header from '../common/Header';
@@ -58,7 +59,7 @@ class AddTask extends Component {
   };
 
   render() {
-    const {name, todoAt, errors} = this.state;
+    const {name, todoAt, errors, show} = this.state;
     console.log(this.state);
     return (
       <View style={styles.container}>
@@ -81,37 +82,22 @@ class AddTask extends Component {
             <If show={errors.name}>
               <Text style={styles.errorText}>{errors.name}</Text>
             </If>
-            <TouchableOpacity onPress={() => this.setState({show: true})}>
-              <Input
-                placeholder="Date"
-                value={
-                  todoAt.toString() === ''
-                    ? ''
-                    : moment(todoAt.toString()).format('DD-MM-YYYY')
-                }
-                style={{marginTop: 20, color: 'black'}}
-                name="todoAt"
-                editable={false}
-              />
-            </TouchableOpacity>
-            <If show={this.state.show}>
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={new Date()}
-                mode={'date'}
-                is24Hour={false}
-                display="default"
-                onChange={(event, seletedDate) =>
-                  this.updateTextInput('todoAt', seletedDate)
-                }
-                onTouchCancel={() =>
-                  this.setState({
-                    show: false,
-                  })
-                }
-              />
-            </If>
-
+            <DatePicker
+              onPress={() => this.setState({show: true})}
+              placeholder="Date"
+              value={todoAt}
+              style={{marginTop: 20, color: 'black'}}
+              name="todoAt"
+              show={show}
+              mode="date"
+              onChange={this.updateTextInput}
+              onTouchCancel={() =>
+                this.setState({
+                  show: false,
+                  todoAt: '',
+                })
+              }
+            />
             <If show={errors.todoAt}>
               <Text style={styles.errorText}>{errors.todoAt}</Text>
             </If>
@@ -172,3 +158,34 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, null)(AddTask);
+
+// <TouchableOpacity onPress={() => this.setState({show: true})}>
+//               <Input
+//                 placeholder="Date"
+//                 value={
+//                   todoAt.toString() === ''
+//                     ? ''
+//                     : moment(todoAt.toString()).format('DD-MM-YYYY')
+//                 }
+//                 style={{marginTop: 20, color: 'black'}}
+//                 name="todoAt"
+//                 editable={false}
+//               />
+//             </TouchableOpacity>
+//             <If show={this.state.show}>
+//               <DateTimePicker
+//                 testID="dateTimePicker"
+//                 value={new Date()}
+//                 mode={'date'}
+//                 is24Hour={false}
+//                 display="default"
+//                 onChange={(event, seletedDate) =>
+//                   this.updateTextInput('todoAt', seletedDate)
+//                 }
+//                 onTouchCancel={() =>
+//                   this.setState({
+//                     show: false,
+//                   })
+//                 }
+//               />
+//             </If>

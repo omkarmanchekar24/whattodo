@@ -3,8 +3,20 @@ import {TouchableOpacity, View} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Input from './Input';
 import If from './If';
+import moment from 'moment';
 
 class DatePicker extends Component {
+  getValue = () => {
+    if (this.props.mode === 'date') {
+      return this.props.value.toString() === ''
+        ? ''
+        : moment(this.props.value.toString()).format('DD-MM-YYYY');
+    }
+    return this.props.value.toString() === ''
+      ? ''
+      : moment(this.props.value.toString()).format('hh:mm a');
+  };
+
   render() {
     const {
       onPress,
@@ -23,7 +35,7 @@ class DatePicker extends Component {
         <TouchableOpacity onPress={onPress}>
           <Input
             placeholder={placeholder}
-            value={value}
+            value={this.getValue()}
             style={style}
             name={name}
             editable={false}
@@ -36,8 +48,11 @@ class DatePicker extends Component {
             mode={mode}
             is24Hour={false}
             display="default"
-            onChange={(event, seletedDate) => onChange(event, seletedDate)}
-            onTouchCancel={onTouchCancel}
+            onChange={(event, seletedDate) => onChange(name, seletedDate)}
+            onTouchCancel={(event) => {
+              console.log(event);
+              onTouchCancel();
+            }}
           />
         </If>
       </View>
