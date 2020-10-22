@@ -7,7 +7,7 @@ class Header extends Component {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        <Text style={styles.title}>What to do </Text>
+        <Text style={styles.title}>What To Do </Text>
 
         <If show={this.props.logout}>
           <IconButton

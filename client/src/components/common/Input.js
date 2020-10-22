@@ -1,7 +1,15 @@
 import React from 'react';
 import {View, TextInput} from 'react-native';
 
-export default function Input({placeholder, style, onChangeText, name, value}) {
+export default function Input({
+  placeholder,
+  style,
+  onChangeText,
+  name,
+  value,
+  onFocus,
+  editable,
+}) {
   return (
     <View>
       <TextInput
@@ -10,10 +18,17 @@ export default function Input({placeholder, style, onChangeText, name, value}) {
         placeholder={placeholder}
         onChangeText={(text) => onChangeText(name, text)}
         value={value}
+        onFocus={onFocus}
+        editable={editable}
       />
     </View>
   );
 }
+
+Input.defaultProps = {
+  onFocus: () => {},
+  editable: true,
+};
 
 const styles = {
   input: {borderWidth: 0.5, borderRadius: 10},

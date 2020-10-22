@@ -67,7 +67,7 @@ class Landing extends Component {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => console.log('Pressed')}>
+            onPress={() => Actions.addtask()}>
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
         </View>

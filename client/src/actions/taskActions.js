@@ -26,6 +26,8 @@ export const getTasks = (id) => {
   };
 };
 
+export const addTask = (name, todoAt) => {};
+
 export const deleteTask = (id) => {
   return (dispatch) => {
     axios

@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/datetimepicker": "^3.0.4",
     "axios": "^0.20.0",
     "jwt-decode": "^3.0.0",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-datepicker": "^1.7.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-paper": "^4.2.0",
     "react-native-reanimated": "^1.13.1",

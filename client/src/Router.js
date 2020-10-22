@@ -6,6 +6,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Landing from './components/Landing/Landing';
 import Splash from './components/splash/Splash';
+import AddTask from './components/Landing/AddTask';
 
 const RouterComponent = () => {
   return (
@@ -18,6 +19,7 @@ const RouterComponent = () => {
         </Scene>
         <Scene key="welcome">
           <Scene key="landing" component={Landing} hideNavBar initial />
+          <Scene key="addtask" component={AddTask} hideNavBar />
         </Scene>
       </Scene>
     </Router>
