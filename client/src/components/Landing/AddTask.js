@@ -13,12 +13,15 @@ import If from '../common/If';
 
 //Actions
 import {addTask} from '../../actions/taskActions';
+import {logout} from '../../actions/authActions';
 
 class AddTask extends Component {
   state = {
     name: '',
     todoAt: '',
-    show: false,
+    todoTime: '',
+    showDatePicker: false,
+    showTimePicker: false,
     errors: {},
   };
 
@@ -36,7 +39,15 @@ class AddTask extends Component {
       this.setState({
         [prop]: val,
         errors: {},
-        show: false,
+        showDatePicker: false,
+      });
+      return;
+    }
+    if (prop === 'todoTime') {
+      this.setState({
+        [prop]: val,
+        errors: {},
+        showTimePicker: false,
       });
       return;
     }
@@ -47,10 +58,11 @@ class AddTask extends Component {
   };
 
   handleAdd = () => {
-    const {name, todoAt} = this.state;
+    const {name, todoAt, todoTime} = this.state;
     const errors = {};
     if (name.length === 0) errors.name = 'Task name is required';
-    if (todoAt.length === 0) errors.todoAt = 'Date and time is required';
+    if (todoAt.length === 0) errors.todoAt = 'Date is required';
+    if (todoTime.length === 0) errors.todoTime = 'Time is required';
     if (Object.keys(errors).length > 0) {
       this.setState({errors});
       return;
@@ -59,11 +71,22 @@ class AddTask extends Component {
   };
 
   render() {
-    const {name, todoAt, errors, show} = this.state;
+    const {
+      name,
+      todoAt,
+      todoTime,
+      errors,
+      showDatePicker,
+      showTimePicker,
+    } = this.state;
     console.log(this.state);
     return (
       <View style={styles.container}>
-        <Header style={styles.header} logout={true} />
+        <Header
+          style={styles.header}
+          logout={true}
+          onLogoutClick={this.props.logout}
+        />
 
         <View style={styles.body}>
           <ScrollView
@@ -83,23 +106,31 @@ class AddTask extends Component {
               <Text style={styles.errorText}>{errors.name}</Text>
             </If>
             <DatePicker
-              onPress={() => this.setState({show: true})}
+              onPress={() => this.setState({showDatePicker: true})}
               placeholder="Date"
               value={todoAt}
               style={{marginTop: 20, color: 'black'}}
               name="todoAt"
-              show={show}
+              show={showDatePicker}
               mode="date"
               onChange={this.updateTextInput}
-              onTouchCancel={() =>
-                this.setState({
-                  show: false,
-                  todoAt: '',
-                })
-              }
             />
             <If show={errors.todoAt}>
               <Text style={styles.errorText}>{errors.todoAt}</Text>
+            </If>
+
+            <DatePicker
+              onPress={() => this.setState({showTimePicker: true})}
+              placeholder="Time"
+              value={todoTime}
+              style={{marginTop: 20, color: 'black'}}
+              name="todoTime"
+              show={showTimePicker}
+              mode="time"
+              onChange={this.updateTextInput}
+            />
+            <If show={errors.todoTime}>
+              <Text style={styles.errorText}>{errors.todoTime}</Text>
             </If>
 
             <Button
@@ -157,7 +188,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(AddTask);
+export default connect(mapStateToProps, {logout})(AddTask);
 
 // <TouchableOpacity onPress={() => this.setState({show: true})}>
 //               <Input

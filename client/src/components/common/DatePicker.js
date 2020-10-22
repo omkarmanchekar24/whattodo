@@ -27,7 +27,6 @@ class DatePicker extends Component {
       show,
       mode,
       onChange,
-      onTouchCancel,
     } = this.props;
 
     return (
@@ -48,10 +47,10 @@ class DatePicker extends Component {
             mode={mode}
             is24Hour={false}
             display="default"
-            onChange={(event, seletedDate) => onChange(name, seletedDate)}
-            onTouchCancel={(event) => {
-              console.log(event);
-              onTouchCancel();
+            onChange={(event, seletedDate) => {
+              console.log('called');
+              if (seletedDate === undefined) return;
+              onChange(name, seletedDate);
             }}
           />
         </If>
