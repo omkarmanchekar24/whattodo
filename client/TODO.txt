@@ -1,0 +1,4 @@
+add task 
+add spinner
+add email verification
+make responsive
