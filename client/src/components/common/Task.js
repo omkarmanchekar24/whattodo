@@ -19,7 +19,7 @@ class Task extends Component {
       <View style={styles.container} key={key}>
         <Card.Title
           title={title}
-          subtitle={moment(todoAt).format('hh:mm DD-MM-YYYY')}
+          subtitle={moment(todoAt).format('hh:mm a DD-MM-YYYY')}
           right={(props) => (
             <RadioButton
               value="first"

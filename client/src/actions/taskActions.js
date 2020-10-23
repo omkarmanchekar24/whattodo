@@ -1,11 +1,15 @@
+import {ToastAndroid} from 'react-native';
 import axios from 'axios';
 import {
   GET_TASKS,
   GET_TASKS_FAILED,
+  ADD_TASK,
+  ADD_TASK_FAILED,
   DELETE_TASK,
   DELETE_TASK_ERROR,
 } from './types';
 import {ip} from '../config/config';
+import {Actions} from 'react-native-router-flux';
 
 export const getTasks = (id) => {
   return (dispatch) => {
@@ -26,7 +30,26 @@ export const getTasks = (id) => {
   };
 };
 
-export const addTask = (name, todoAt) => {};
+export const addTask = (user, name, date) => {
+  return (dispatch) => {
+    axios
+      .post(`${ip}/api/tasks/addtask`, {user, text: name, date})
+      .then((res) => {
+        dispatch({
+          type: ADD_TASK,
+          payload: res.data,
+        });
+        Actions.welcome();
+      })
+      .catch((err) => {
+        dispatch({
+          type: ADD_TASK_FAILED,
+          payload: err.response.data,
+        });
+        ToastAndroid.show('Something went wrong! Please try again later');
+      });
+  };
+};
 
 export const deleteTask = (id) => {
   return (dispatch) => {

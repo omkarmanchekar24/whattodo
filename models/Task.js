@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const TaskSchema = new Schema({
   user: {
@@ -12,11 +13,11 @@ const TaskSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: moment.utc().toDate(),
   },
 });
 

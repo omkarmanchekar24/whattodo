@@ -19,7 +19,6 @@ class Landing extends Component {
   };
 
   componentDidMount() {
-    console.log('id', this.props.auth.user.id);
     this.props.getTasks(this.props.auth.user.id);
   }
 

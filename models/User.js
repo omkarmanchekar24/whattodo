@@ -18,7 +18,7 @@ const UserSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
+    default: moment.utc().toDate(),
   },
 });
 

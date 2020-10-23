@@ -1,6 +1,8 @@
 import {
   GET_TASKS,
   GET_TASKS_FAILED,
+  ADD_TASK,
+  ADD_TASK_FAILED,
   DELETE_TASK,
   DELETE_TASK_ERROR,
 } from '../actions/types';
@@ -19,6 +21,17 @@ export default (state = Initial_State, action) => {
         errors: {},
       };
     case GET_TASKS_FAILED:
+      return {
+        ...state,
+        errors: action.payload,
+      };
+
+    case ADD_TASK:
+      return {
+        ...state,
+        errors: {},
+      };
+    case ADD_TASK_FAILED:
       return {
         ...state,
         errors: action.payload,

@@ -36,16 +36,19 @@ class AddTask extends Component {
 
   updateTextInput = (prop, val) => {
     if (prop === 'todoAt') {
+      let data = val === '' ? '' : moment(val).format('DD-MM-YYYY');
+
       this.setState({
-        [prop]: val,
+        [prop]: data,
         errors: {},
         showDatePicker: false,
       });
       return;
     }
     if (prop === 'todoTime') {
+      let data = val === '' ? '' : moment(val).format('hh:mm a');
       this.setState({
-        [prop]: val,
+        [prop]: data,
         errors: {},
         showTimePicker: false,
       });
@@ -67,7 +70,10 @@ class AddTask extends Component {
       this.setState({errors});
       return;
     }
-    this.props.addTask(name, todoAt);
+    let date = moment(`${todoAt} ${todoTime}`, 'DD-MM-YYYY hh:mm').format();
+    let utcDate = moment.utc(date).format();
+
+    this.props.addTask(this.props.auth.user.id, name, utcDate);
   };
 
   render() {
@@ -79,7 +85,7 @@ class AddTask extends Component {
       showDatePicker,
       showTimePicker,
     } = this.state;
-    console.log(this.state);
+
     return (
       <View style={styles.container}>
         <Header
@@ -183,12 +189,11 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.login.loading,
-    errors: state.login.errors,
+    auth: state.auth,
   };
 };
 
-export default connect(mapStateToProps, {logout})(AddTask);
+export default connect(mapStateToProps, {logout, addTask})(AddTask);
 
 // <TouchableOpacity onPress={() => this.setState({show: true})}>
 //               <Input

@@ -6,16 +6,16 @@ import If from './If';
 import moment from 'moment';
 
 class DatePicker extends Component {
-  getValue = () => {
-    if (this.props.mode === 'date') {
-      return this.props.value.toString() === ''
-        ? ''
-        : moment(this.props.value.toString()).format('DD-MM-YYYY');
-    }
-    return this.props.value.toString() === ''
-      ? ''
-      : moment(this.props.value.toString()).format('hh:mm a');
-  };
+  // getValue = () => {
+  //   if (this.props.mode === 'date') {
+  //     return this.props.value.toString() === ''
+  //       ? ''
+  //       : moment(this.props.value.toString()).format('DD-MM-YYYY');
+  //   }
+  //   return this.props.value.toString() === ''
+  //     ? ''
+  //     : moment(this.props.value.toString()).format('hh:mm a');
+  // };
 
   render() {
     const {
@@ -34,7 +34,7 @@ class DatePicker extends Component {
         <TouchableOpacity onPress={onPress}>
           <Input
             placeholder={placeholder}
-            value={this.getValue()}
+            value={value}
             style={style}
             name={name}
             editable={false}
@@ -48,8 +48,9 @@ class DatePicker extends Component {
             is24Hour={false}
             display="default"
             onChange={(event, seletedDate) => {
-              console.log('called');
-              if (seletedDate === undefined) return;
+              if (seletedDate === undefined) {
+                seletedDate = '';
+              }
               onChange(name, seletedDate);
             }}
           />
