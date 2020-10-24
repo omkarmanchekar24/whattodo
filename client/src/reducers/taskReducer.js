@@ -1,4 +1,5 @@
 import {
+  TASK_LOADING,
   GET_TASKS,
   GET_TASKS_FAILED,
   ADD_TASK,
@@ -9,31 +10,42 @@ import {
 
 const Initial_State = {
   tasks: null,
+  loading: false,
   errors: {},
 };
 
 export default (state = Initial_State, action) => {
   switch (action.type) {
+    case TASK_LOADING:
+      return {
+        ...state,
+        loading: true,
+        errors: {},
+      };
     case GET_TASKS:
       return {
         ...state,
         tasks: action.payload,
+        loading: false,
         errors: {},
       };
     case GET_TASKS_FAILED:
       return {
         ...state,
+        loading: false,
         errors: action.payload,
       };
 
     case ADD_TASK:
       return {
         ...state,
+        loading: true,
         errors: {},
       };
     case ADD_TASK_FAILED:
       return {
         ...state,
+        loading: false,
         errors: action.payload,
       };
     case DELETE_TASK:

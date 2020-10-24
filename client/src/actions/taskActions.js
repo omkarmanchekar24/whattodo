@@ -1,6 +1,7 @@
 import {ToastAndroid} from 'react-native';
 import axios from 'axios';
 import {
+  TASK_LOADING,
   GET_TASKS,
   GET_TASKS_FAILED,
   ADD_TASK,
@@ -13,6 +14,7 @@ import {Actions} from 'react-native-router-flux';
 
 export const getTasks = (id) => {
   return (dispatch) => {
+    dispatch(setTaskLoading());
     axios
       .get(`${ip}/api/tasks/${id}`)
       .then((res) =>
@@ -32,6 +34,7 @@ export const getTasks = (id) => {
 
 export const addTask = (user, name, date) => {
   return (dispatch) => {
+    dispatch(setTaskLoading());
     axios
       .post(`${ip}/api/tasks/addtask`, {user, text: name, date})
       .then((res) => {
@@ -68,5 +71,11 @@ export const deleteTask = (id) => {
           payload: err.response.data,
         }),
       );
+  };
+};
+
+export const setTaskLoading = () => {
+  return {
+    type: TASK_LOADING,
   };
 };

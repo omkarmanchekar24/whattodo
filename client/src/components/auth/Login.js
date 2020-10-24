@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {Button} from 'react-native-paper';
+// import {Button} from 'react-native-paper';
 import Input from '../common/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 //Components
 import Header from '../common/Header';
 import If from '../common/If';
+import Button from '../common/Button';
 
 //Actions
 import {login} from '../../actions/authActions';
@@ -16,6 +17,7 @@ class Login extends Component {
   state = {
     email: 'omkarmanchekar.24@gmail.com',
     password: '444444',
+    loading: false,
     errors: {},
   };
 
@@ -28,7 +30,11 @@ class Login extends Component {
   // }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.errors) {
+    if (props.loading === true) {
+      return {
+        loading: true,
+      };
+    } else if (props.errors) {
       return {
         errors: props.errors,
       };
@@ -59,7 +65,7 @@ class Login extends Component {
   };
 
   render() {
-    const {errors} = this.state;
+    const {errors, loading} = this.state;
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
@@ -77,6 +83,7 @@ class Login extends Component {
               style={{marginTop: 20}}
               name="email"
               onChangeText={this.updateTextInput}
+              disabled={loading}
             />
             <If show={errors.email}>
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -88,25 +95,24 @@ class Login extends Component {
               style={{marginTop: 20}}
               name="password"
               onChangeText={this.updateTextInput}
+              disabled={loading}
             />
             <If show={errors.password}>
               <Text style={styles.errorText}>{errors.password}</Text>
             </If>
-
             <Button
-              mode="outlined"
+              text="Sign In"
+              loading={loading}
               onPress={this.handleLogin}
-              style={styles.loginButton}
-              color="#000">
-              Sign In
-            </Button>
+            />
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.text}>Don't have an account? </Text>
-              <TouchableOpacity
+              <Button
+                text="Sign Up"
+                onPress={() => Actions.register()}
                 style={styles.registerButton}
-                onPress={() => Actions.register()}>
-                <Text style={{fontSize: 12, alignSelf: 'center'}}>Sign Up</Text>
-              </TouchableOpacity>
+                textStyle={{fontSize: 12, alignSelf: 'center'}}
+              />
             </View>
           </ScrollView>
         </View>
@@ -149,10 +155,10 @@ const styles = {
   loginButton: {marginTop: 20},
   registerButton: {
     borderWidth: 1,
-    borderRadius: 5,
     width: 50,
     height: 20,
     marginTop: 10,
+    padding: 0,
   },
 };
 
@@ -164,3 +170,17 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {login})(Login);
+
+// <Button
+//               mode="outlined"
+//               onPress={this.handleLogin}
+//               style={styles.loginButton}
+//               color="#000">
+//               Sign In
+//             </Button>
+
+// <TouchableOpacity
+//                 style={styles.registerButton}
+//                 onPress={() => Actions.register()}>
+//                 <Text style={{fontSize: 12, alignSelf: 'center'}}>Sign Up</Text>
+//               </TouchableOpacity>
