@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {Button} from 'react-native-paper';
+//import {Button} from 'react-native-paper';
 import Input from '../common/Input';
 import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
@@ -8,15 +8,17 @@ import {connect} from 'react-redux';
 //Components
 import Header from '../common/Header';
 import If from '../common/If';
+import Button from '../common/Button';
 
 //Actions
 import {register} from '../../actions/authActions';
 
 class Register extends Component {
   state = {
-    name: 'omkar',
-    email: 'omkarmanchekar.24@gmail.com',
-    password: '444444',
+    name: 'akshay',
+    email: 'akshay@gmail.com',
+    password: 'aaaaaa',
+    loading: false,
     errors: {},
   };
 
@@ -29,7 +31,11 @@ class Register extends Component {
   // }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.errors) {
+    if (props.loading === true) {
+      return {
+        loading: true,
+      };
+    } else if (props.errors) {
       return {
         errors: props.errors,
       };
@@ -61,7 +67,7 @@ class Register extends Component {
   };
 
   render() {
-    const {errors} = this.state;
+    const {errors, loading} = this.state;
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
@@ -78,6 +84,7 @@ class Register extends Component {
               style={{marginTop: 20}}
               name="name"
               onChangeText={this.updateTextInput}
+              disabled={loading}
             />
             <If show={errors.name}>
               <Text style={styles.errorText}>{errors.name}</Text>
@@ -89,6 +96,7 @@ class Register extends Component {
               style={{marginTop: 20}}
               name="email"
               onChangeText={this.updateTextInput}
+              disabled={loading}
             />
             <If show={errors.email}>
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -100,25 +108,27 @@ class Register extends Component {
               style={{marginTop: 20}}
               name="password"
               onChangeText={this.updateTextInput}
+              disabled={loading}
             />
             <If show={errors.password}>
               <Text style={styles.errorText}>{errors.password}</Text>
             </If>
-
             <Button
-              mode="outlined"
-              onPress={this.handleRegister}
+              text="Sign Up"
               style={styles.registerButton}
-              color="#000">
-              Sign Up
-            </Button>
+              onPress={this.handleRegister}
+              loading={loading}
+              disabled={loading}
+            />
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.text}>Already have an account? </Text>
-              <TouchableOpacity
+              <Button
+                text="Sign In"
                 style={styles.loginButton}
-                onPress={() => Actions.login()}>
-                <Text style={{fontSize: 12, alignSelf: 'center'}}>Sign In</Text>
-              </TouchableOpacity>
+                onPress={() => Actions.login()}
+                textStyle={{fontSize: 12, alignSelf: 'center'}}
+                disabled={loading}
+              />
             </View>
           </ScrollView>
         </View>
@@ -165,6 +175,7 @@ const styles = {
     width: 50,
     height: 20,
     marginTop: 10,
+    padding: 0,
   },
 };
 
@@ -176,3 +187,17 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {register})(Register);
+
+// <Button
+// mode="outlined"
+// onPress={this.handleRegister}
+// style={styles.registerButton}
+// color="#000">
+// Sign Up
+// </Button>
+
+// <TouchableOpacity
+//                 style={styles.loginButton}
+//                 onPress={() => Actions.login()}>
+//                 <Text style={{fontSize: 12, alignSelf: 'center'}}>Sign In</Text>
+//               </TouchableOpacity>

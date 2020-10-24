@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {Card, Button, IconButton} from 'react-native-paper';
 import Input from '../common/Input';
 import {Actions} from 'react-native-router-flux';
@@ -32,19 +38,40 @@ class Landing extends Component {
   }
 
   render() {
-    let content =
-      this.state.tasks !== null && this.state.tasks.length > 0 ? (
-        this.state.tasks.map((task) => (
-          <Task
-            title={task.text}
-            todoAt={task.date}
-            key={task._id}
-            id={task._id}
-          />
-        ))
-      ) : (
-        <Text>You haven't added any task yet.</Text>
+    let data;
+    if (this.state.tasks === null || this.props.task.loading === true) {
+      data = (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
       );
+    } else if (this.state.tasks.length === 0) {
+      data = (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>It looks like you haven't added any task yet</Text>
+          <Text>Please press the add button to add a task.</Text>
+        </View>
+      );
+    } else {
+      data = (
+        <ScrollView
+          style={{width: '100%'}}
+          contentContainerStyle={{
+            flexGrow: 1,
+            alignItems: 'center',
+          }}
+          scrollEnabled={true}>
+          {this.state.tasks.map((task) => (
+            <Task
+              title={task.text}
+              todoAt={task.date}
+              key={task._id}
+              id={task._id}
+            />
+          ))}
+        </ScrollView>
+      );
+    }
 
     return (
       <View style={styles.container}>
@@ -54,15 +81,7 @@ class Landing extends Component {
           onLogoutClick={this.props.logout}
         />
         <View style={styles.body}>
-          <ScrollView
-            style={{width: '100%'}}
-            contentContainerStyle={{
-              flexGrow: 1,
-              alignItems: 'center',
-            }}
-            scrollEnabled={true}>
-            {content}
-          </ScrollView>
+          {data}
 
           <TouchableOpacity
             style={styles.button}
@@ -113,7 +132,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {logout, getTasks})(Landing);
-
-// <Button onPress={() => {}} style={styles.button} mode="outlined">
-// +
-// </Button>

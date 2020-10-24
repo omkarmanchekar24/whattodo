@@ -9,6 +9,7 @@ export default function Input({
   value,
   onFocus,
   editable,
+  disabled,
 }) {
   return (
     <View>
@@ -20,6 +21,7 @@ export default function Input({
         value={value}
         onFocus={onFocus}
         editable={editable}
+        disabled={disabled}
       />
     </View>
   );

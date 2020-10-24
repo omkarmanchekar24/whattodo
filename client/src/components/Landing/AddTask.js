@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import {Button} from 'react-native-paper';
+//import {Button} from 'react-native-paper';
 import Input from '../common/Input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {connect} from 'react-redux';
@@ -10,6 +10,7 @@ import DatePicker from '../common/DatePicker';
 //Components
 import Header from '../common/Header';
 import If from '../common/If';
+import Button from '../common/Button';
 
 //Actions
 import {addTask} from '../../actions/taskActions';
@@ -22,17 +23,22 @@ class AddTask extends Component {
     todoTime: '',
     showDatePicker: false,
     showTimePicker: false,
+    loading: false,
     errors: {},
   };
 
-  //   static getDerivedStateFromProps(props, state) {
-  //     if (props.errors) {
-  //       return {
-  //         errors: props.errors,
-  //       };
-  //     }
-  //     return null;
-  //   }
+  static getDerivedStateFromProps(props, state) {
+    if (props.task.loading === true) {
+      return {
+        loading: true,
+      };
+    } else if (props.errors) {
+      return {
+        errors: props.errors,
+      };
+    }
+    return null;
+  }
 
   updateTextInput = (prop, val) => {
     if (prop === 'todoAt') {
@@ -84,6 +90,7 @@ class AddTask extends Component {
       errors,
       showDatePicker,
       showTimePicker,
+      loading,
     } = this.state;
 
     return (
@@ -138,14 +145,12 @@ class AddTask extends Component {
             <If show={errors.todoTime}>
               <Text style={styles.errorText}>{errors.todoTime}</Text>
             </If>
-
             <Button
-              mode="outlined"
+              text="Add"
               onPress={this.handleAdd}
-              style={styles.addButton}
-              color="#000">
-              Add
-            </Button>
+              loading={loading}
+              disabled={loading}
+            />
           </ScrollView>
         </View>
       </View>
@@ -190,38 +195,16 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
+    task: state.task,
   };
 };
 
 export default connect(mapStateToProps, {logout, addTask})(AddTask);
 
-// <TouchableOpacity onPress={() => this.setState({show: true})}>
-//               <Input
-//                 placeholder="Date"
-//                 value={
-//                   todoAt.toString() === ''
-//                     ? ''
-//                     : moment(todoAt.toString()).format('DD-MM-YYYY')
-//                 }
-//                 style={{marginTop: 20, color: 'black'}}
-//                 name="todoAt"
-//                 editable={false}
-//               />
-//             </TouchableOpacity>
-//             <If show={this.state.show}>
-//               <DateTimePicker
-//                 testID="dateTimePicker"
-//                 value={new Date()}
-//                 mode={'date'}
-//                 is24Hour={false}
-//                 display="default"
-//                 onChange={(event, seletedDate) =>
-//                   this.updateTextInput('todoAt', seletedDate)
-//                 }
-//                 onTouchCancel={() =>
-//                   this.setState({
-//                     show: false,
-//                   })
-//                 }
-//               />
-//             </If>
+// <Button
+//               mode="outlined"
+//               onPress={this.handleAdd}
+//               style={styles.addButton}
+//               color="#000">
+//               Add
+//             </Button>
