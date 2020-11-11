@@ -7,7 +7,7 @@ import setAuthToken from '../../utils/setAuthToken';
 class Splash extends Component {
   componentDidMount() {
     setTimeout(() => {
-      if (this.props.auth.user) {
+      if (this.props.auth.token !== null) {
         setAuthToken(this.props.auth.token);
         Actions.welcome();
       } else {

@@ -14,12 +14,23 @@ class Task extends Component {
 
   render() {
     const {title, todoAt, key, id} = this.props;
+    let today = moment();
+    let tomorrow = moment().add(1, 'day');
+    let date;
+
+    if (moment(todoAt).isSame(today, 'day')) {
+      date = `Today ${moment(todoAt).format('hh:mm a')}`;
+    } else if (moment(todoAt).isSame(tomorrow, 'day')) {
+      date = `Tomorrow ${moment(todoAt).format('hh:mm a')}`;
+    } else {
+      date = moment(todoAt).format('DD-MM-YYYY hh:mm a');
+    }
 
     return (
       <View style={styles.container} key={key}>
         <Card.Title
           title={title}
-          subtitle={moment(todoAt).format('hh:mm a DD-MM-YYYY')}
+          subtitle={date}
           right={(props) => (
             <RadioButton
               value="first"

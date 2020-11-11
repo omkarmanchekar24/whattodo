@@ -10,6 +10,9 @@ import {
   Login_User,
   Login_Errors,
   SET_CURRENT_USER,
+  OTP_LOADING,
+  OTP_VERIFY,
+  OTP_ERRORS,
 } from './types';
 import {Actions} from 'react-native-router-flux';
 import {ip} from '../config/config';
@@ -28,8 +31,7 @@ export const register = (name, email, password) => {
         dispatch({
           type: Register_User,
         });
-        Actions.login();
-        ToastAndroid.show('Registered Successfully!', ToastAndroid.LONG);
+        Actions.otp({email: res.data.email});
       })
       .catch((err) =>
         dispatch({
@@ -37,6 +39,29 @@ export const register = (name, email, password) => {
           payload: err.response.data,
         }),
       );
+  };
+};
+
+export const verify = (email, verificationToken) => {
+  return (dispatch) => {
+    dispatch(setOtpLoading());
+
+    axios
+      .patch(`${ip}/api/users/verify`, {email, verificationToken})
+      .then((res) => {
+        dispatch({
+          type: OTP_VERIFY,
+        });
+        Actions.auth();
+        ToastAndroid.show('Email verification successfull!', ToastAndroid.LONG);
+      })
+      .catch((err) => {
+        dispatch({
+          type: OTP_ERRORS,
+          payload: err.response.data,
+        });
+        console.log(err.response.data);
+      });
   };
 };
 
@@ -102,5 +127,11 @@ export const setRegisterLoading = () => {
 export const setLoginLoading = () => {
   return {
     type: Login_Loading,
+  };
+};
+
+export const setOtpLoading = () => {
+  return {
+    type: OTP_LOADING,
   };
 };

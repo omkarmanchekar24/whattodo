@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Text,
@@ -48,7 +50,6 @@ class Landing extends Component {
     } else if (this.state.tasks.length === 0) {
       data = (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>It looks like you haven't added any task yet</Text>
           <Text>Please press the add button to add a task.</Text>
         </View>
       );

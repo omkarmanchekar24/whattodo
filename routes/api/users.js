@@ -4,6 +4,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const generateVerificationToken = require("../../utils/Utils");
+const sendEmail = require("../../utils/NodeMailer");
+const moment = require("moment");
 
 //Load User Model
 const User = require("../../models/User");
@@ -28,16 +31,23 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
 
+  const verificationToken = generateVerificationToken();
+  const email = req.body.email;
+  const name = req.body.name;
+  const password = req.body.password;
+
   User.findOne({
-    email: req.body.email,
+    email,
   }).then((user) => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
     } else {
       const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
+        name,
+        email,
+        password,
+        verification_token: verificationToken,
+        verification_token_time: moment.utc().add(6, "minutes").toDate(),
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -46,12 +56,84 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then((user) => res.json(user))
+            .then(async (user) => {
+              await sendEmail({
+                to: [email],
+                subject: "Email verification",
+                html: `<p>Hey ${name}</p><br/>
+                <p>Your <b>what to do</b> one time password to verify email id is <b>${verificationToken}</b></p><br/>
+`,
+              });
+              res.json(user);
+            })
             .catch((err) => console.log(err));
         });
       });
     }
   });
+});
+
+//@route    PATCH api/users/verify
+//@desc     Verify email id by matching verification token
+//@access   Public
+router.patch("/verify", async (req, res) => {
+  const verificationToken = req.body.verificationToken;
+  const email = req.body.email;
+
+  try {
+    const user = await User.findOneAndUpdate(
+      {
+        email,
+        verification_token: verificationToken,
+        verification_token_time: { $gt: moment.utc().toDate() },
+      },
+      { verified: true },
+      { new: true }
+    );
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res
+        .status(400)
+        .json({ otp: "Otp has expired. Please request a new one." });
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
+//@route    PATCH api/users/resendtoken
+//@desc     Resend verification token
+//@access   Public
+router.patch("/resendtoken", async (req, res) => {
+  const email = req.body.email;
+  const verificationToken = generateVerificationToken();
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { email },
+      {
+        verification_token: verificationToken,
+        verification_token_time: moment.utc().add(6, "minutes").toDate(),
+      }
+    );
+
+    if (user) {
+      await sendEmail({
+        to: [user.email],
+        subject: "Email Verification",
+        html: `<p>Hey ${user.name}</p><br/>
+        <p>Your what to do one time password to verify email id is <b>${verificationToken}</b></p><br/>
+`,
+      });
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ message: "User does not exist" });
+    }
+  } catch (error) {
+    throw error;
+  }
 });
 
 //@route    POST api/users/login

@@ -16,6 +16,18 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  verification_token: {
+    type: Number,
+    required: true,
+  },
+  verification_token_time: {
+    type: Date,
+    required: true,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: moment.utc().toDate(),
@@ -23,6 +35,3 @@ const UserSchema = new Schema({
 });
 
 module.exports = User = mongoose.model("users", UserSchema);
-
-// moment utc 2020-09-06T15:32:37.000+00:00
-// Date.now() 2020-09-06T15:36:56.565+00:00

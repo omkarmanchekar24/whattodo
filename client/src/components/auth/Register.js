@@ -15,29 +15,23 @@ import {register} from '../../actions/authActions';
 
 class Register extends Component {
   state = {
-    name: 'akshay',
-    email: 'akshay@gmail.com',
-    password: 'aaaaaa',
+    name: 'Gopal',
+    email: 'gopalsjadhav309@gmail.com',
+    password: 'gggggg',
     loading: false,
     errors: {},
   };
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.errors) {
-  //     this.setState({
-  //       errors: nextProps.errors,
-  //     });
-  //   }
-  // }
 
   static getDerivedStateFromProps(props, state) {
     if (props.loading === true) {
       return {
         loading: true,
+        errors: {},
       };
     } else if (props.errors) {
       return {
         errors: props.errors,
+        loading: false,
       };
     }
     return null;

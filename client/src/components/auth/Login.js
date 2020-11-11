@@ -15,28 +15,22 @@ import {login} from '../../actions/authActions';
 
 class Login extends Component {
   state = {
-    email: 'omkarmanchekar.24@gmail.com',
-    password: '444444',
+    email: 'gopalsjadhav309@gmail.com',
+    password: 'gggggg',
     loading: false,
     errors: {},
   };
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.errors) {
-  //     this.setState({
-  //       errors: nextProps.errors,
-  //     });
-  //   }
-  // }
 
   static getDerivedStateFromProps(props, state) {
     if (props.loading === true) {
       return {
         loading: true,
+        errors: {},
       };
     } else if (props.errors) {
       return {
         errors: props.errors,
+        loading: false,
       };
     }
     return null;
@@ -96,6 +90,7 @@ class Login extends Component {
               name="password"
               onChangeText={this.updateTextInput}
               disabled={loading}
+              secureTextEntry={true}
             />
             <If show={errors.password}>
               <Text style={styles.errorText}>{errors.password}</Text>

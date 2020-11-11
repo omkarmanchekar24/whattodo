@@ -10,11 +10,14 @@ export default function Input({
   onFocus,
   editable,
   disabled,
+  keyboardType,
+  secureTextEntry,
 }) {
   return (
     <View>
       <TextInput
-        keyboardType="email-address"
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
         style={[style, styles.input]}
         placeholder={placeholder}
         onChangeText={(text) => onChangeText(name, text)}
@@ -30,6 +33,8 @@ export default function Input({
 Input.defaultProps = {
   onFocus: () => {},
   editable: true,
+  keyboardType: 'default',
+  secureTextEntry: false,
 };
 
 const styles = {
