@@ -52,6 +52,7 @@ class Login extends Component {
 
     if (Object.keys(errors).length > 0) {
       this.setState({errors});
+      //console.log(errors);
       return;
     }
 
@@ -60,6 +61,7 @@ class Login extends Component {
 
   render() {
     const {errors, loading} = this.state;
+    console.log(this.state.errors);
     return (
       <View style={styles.container}>
         <Header style={styles.header} />
@@ -98,7 +100,7 @@ class Login extends Component {
             <Button
               text="Sign In"
               loading={loading}
-              onPress={this.handleLogin}
+              onPress={this.handleLogin.bind(this)}
             />
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.text}>Don't have an account? </Text>

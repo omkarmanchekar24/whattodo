@@ -107,6 +107,7 @@ router.patch("/verify", async (req, res) => {
 //@desc     Resend verification token
 //@access   Public
 router.patch("/resendtoken", async (req, res) => {
+  console.log("called");
   const email = req.body.email;
   const verificationToken = generateVerificationToken();
 
@@ -132,7 +133,7 @@ router.patch("/resendtoken", async (req, res) => {
       res.status(404).json({ message: "User does not exist" });
     }
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 });
 
@@ -156,6 +157,11 @@ router.post("/login", (req, res) => {
       if (!user) {
         errors.email = "User not found";
         return res.status(404).json(errors);
+      }
+
+      if (!user.verified) {
+        errors.verification = "Email id is not verified";
+        return res.status(400).json(errors);
       }
 
       //Check password

@@ -1,3 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
+/* eslint-disable curly */
 import React, {Component} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 //import {Button} from 'react-native-paper';

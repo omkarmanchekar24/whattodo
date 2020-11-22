@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import {connect} from 'react-redux';
@@ -9,11 +11,11 @@ import Button from '../common/Button';
 import If from '../common/If';
 
 //Actions
-import {verify} from '../../actions/authActions';
+import {verify, resendToken} from '../../actions/authActions';
 
 class Otp extends Component {
   state = {
-    otp: '704953',
+    otp: '',
     loading: false,
     errors: {},
   };
@@ -48,14 +50,20 @@ class Otp extends Component {
 
     if (Object.keys(errors).length > 0) {
       this.setState({errors});
+
       return;
     }
 
     this.props.verify(this.props.email, otp);
   };
 
+  handleResend = () => {
+    this.props.resendToken(this.props.email);
+  };
+
   render() {
     const {loading, errors} = this.state;
+
     return (
       <View style={styles.container}>
         <Header style={{flex: 0.1}} />
@@ -77,13 +85,31 @@ class Otp extends Component {
           <If show={errors.otp}>
             <Text style={styles.errorText}>{errors.otp}</Text>
           </If>
-          <Button
-            text="Next"
-            loading={loading}
-            onPress={this.handleNext}
-            style={{alignSelf: 'center', width: 80}}
-            disabled={loading}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'center',
+            }}>
+            <Button
+              text="Next"
+              loading={loading}
+              onPress={this.handleNext.bind(this)}
+              style={styles.nextButton}
+              disabled={loading}
+            />
+            <Button
+              text="Resend"
+              loading={this.props.resendLoading}
+              onPress={this.handleResend.bind(this)}
+              style={{
+                ...styles.nextButton,
+                backgroundColor: '#7b75eb',
+              }}
+              textStyle={{color: '#fff'}}
+              disabled={loading}
+            />
+          </View>
         </View>
       </View>
     );
@@ -98,6 +124,11 @@ const styles = {
     color: 'red',
     marginLeft: 5,
   },
+  nextButton: {
+    alignSelf: 'center',
+    width: 80,
+    marginRight: 5,
+  },
 };
 
 Otp.defaultProps = {
@@ -107,8 +138,9 @@ Otp.defaultProps = {
 const mapStateToProps = (state) => {
   return {
     loading: state.otp.loading,
+    resendLoading: state.otp.resendLoading,
     errors: state.otp.errors,
   };
 };
 
-export default connect(mapStateToProps, {verify})(Otp);
+export default connect(mapStateToProps, {verify, resendToken})(Otp);

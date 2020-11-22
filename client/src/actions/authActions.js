@@ -11,6 +11,8 @@ import {
   Login_Errors,
   SET_CURRENT_USER,
   OTP_LOADING,
+  RESEND_LOADING,
+  RESEND_OTP,
   OTP_VERIFY,
   OTP_ERRORS,
 } from './types';
@@ -92,12 +94,43 @@ export const login = (email, password) => {
         Actions.welcome();
         ToastAndroid.show('Logged in Successfully!', ToastAndroid.LONG);
       })
-      .catch((err) =>
+      .catch((err) => {
+        if ('verification' in err.response.data) {
+          Actions.otp({email});
+          ToastAndroid.show(
+            'Please verify your email id to use the application',
+            ToastAndroid.LONG,
+          );
+        }
         dispatch({
           type: Login_Errors,
           payload: err.response.data,
-        }),
-      );
+        });
+      });
+  };
+};
+
+export const resendToken = (email) => {
+  return (dispatch) => {
+    dispatch({
+      type: RESEND_LOADING,
+    });
+
+    axios
+      .patch(`${ip}/api/users/resendtoken`, {email})
+      .then((res) => {
+        console.log(res.data);
+        dispatch({
+          type: RESEND_OTP,
+        });
+        ToastAndroid.show('Otp sent to your email id', ToastAndroid.LONG);
+      })
+      .catch((err) => {
+        dispatch({
+          type: OTP_ERRORS,
+          payload: err.response.data,
+        });
+      });
   };
 };
 

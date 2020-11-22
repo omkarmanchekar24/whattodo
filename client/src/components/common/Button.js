@@ -25,6 +25,7 @@ const styles = {
     borderWidth: 0.5,
     padding: 10,
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 5,
   },
 };
